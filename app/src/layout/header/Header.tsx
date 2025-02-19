@@ -6,7 +6,7 @@ import { useTransform } from 'framer-motion';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { forwardRef } from 'react';
+import { forwardRef, Suspense } from 'react';
 import { FaGithub } from 'react-icons/fa';
 
 import { ClientOnly } from '@/ClientOnly';
@@ -17,7 +17,6 @@ import {
 
 import { MobileNavigation } from '../sidebar/_legacy/MobileNavigation';
 import { MobileSearch, Search } from './search/Search';
-import { SubHeader } from './subheader/SubHeader';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
 export const Header = forwardRef<HTMLDivElement, { className?: string }>(
@@ -57,7 +56,7 @@ export const Header = forwardRef<HTMLDivElement, { className?: string }>(
                                 className="block h-8 w-20"
                             >
                                 <img
-                                    src="/ens/primary/ens_logo_primary.svg"
+                                    src="/ens/v2/ens-logo.svg"
                                     className="ml-1 h-8 w-auto"
                                     alt="ENS Logo"
                                     height={'32'}
@@ -70,9 +69,9 @@ export const Header = forwardRef<HTMLDivElement, { className?: string }>(
                                     src={
                                         isDao
                                             ? '/ens/dao/ens_logo_dao.svg'
-                                            : '/ens/primary/ens_logo_primary.svg'
+                                            : '/ens/v2/ens-logo.svg'
                                     }
-                                    className="fill-ens-dao-400 ml-1 h-8"
+                                    className="ml-1 h-8 fill-ens-dao-400"
                                     alt="ENS Logo"
                                     height={'32'}
                                 />
@@ -80,7 +79,7 @@ export const Header = forwardRef<HTMLDivElement, { className?: string }>(
                         </div>
 
                         {/* @ts-ignore */}
-                        <thorin-tag>Docs</thorin-tag>
+                        {/* <thorin-tag>Docs</thorin-tag> */}
                     </div>
                     <div
                         className={clsx(
@@ -90,15 +89,19 @@ export const Header = forwardRef<HTMLDivElement, { className?: string }>(
                         )}
                     />
                     <div className="mx-auto w-full max-w-lg">
-                        <Search />
+                        <Suspense>
+                            <Search />
+                        </Suspense>
                     </div>
                     <div className="float-right flex h-full items-center gap-4">
                         <ClientOnly child={() => <ThemeSwitcher />} />
                         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
                         <div className="flex gap-4">
-                            <MobileSearch />
+                            <Suspense>
+                                <MobileSearch />
+                            </Suspense>
                             <Link
-                                href="https://github.com/ensdomains/docs-v2"
+                                href="https://github.com/ensdomains/docs"
                                 target="_blank"
                                 aria-label="GitHub Repository"
                             >
@@ -110,7 +113,7 @@ export const Header = forwardRef<HTMLDivElement, { className?: string }>(
                         </div>
                     </div>
                 </motion.header>
-                <SubHeader />
+                {/* <SubHeader /> */}
             </>
         );
     }

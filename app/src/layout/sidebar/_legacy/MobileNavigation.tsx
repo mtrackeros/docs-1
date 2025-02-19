@@ -5,19 +5,20 @@ import { usePathname } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiExternalLink } from 'react-icons/fi';
 
-import {
-    isRouteGroup,
-    isRouteLink,
-    navigation,
-    routeElement,
-    routeGroup,
-} from '@/config/navigation';
 import { Header } from '@/layout/header/Header';
 import {
     IsInsideMobileNavigationContext,
     useIsInsideMobileNavigation,
     useMobileNavigationStore,
 } from '@/lib/mobile';
+import {
+    isRouteGroup,
+    isRouteLink,
+    navigation,
+    routeElement,
+    routeGroup,
+} from '#/config/navigation';
+import { showWIP } from '#/config/navigation/protocol';
 
 import { MenuIcon } from '../../../components/icons/MenuIcon';
 import { XIcon } from '../../../components/icons/XIcon';
@@ -80,7 +81,7 @@ export const MobileNavigation = () => {
                             >
                                 <motion.div
                                     layoutScroll
-                                    className="border-zinc-900/7.5 fixed bottom-0 left-0 top-16 z-50 w-full overflow-y-auto bg-white pb-8 shadow-lg shadow-zinc-900/10 border dark:bg-zinc-900 dark:ring-zinc-800 min-[416px]:max-w-sm sm:pl-6"
+                                    className="border-zinc-900/7.5 fixed bottom-0 left-0 top-16 z-50 w-full overflow-y-auto border bg-white pb-8 shadow-lg shadow-zinc-900/10 min-[416px]:max-w-sm sm:pl-6 dark:bg-zinc-900 dark:ring-zinc-800"
                                 >
                                     <ActualNavigation />
                                 </motion.div>
@@ -243,16 +244,17 @@ const NavItem = ({ item, index }: { item: routeElement; index: number }) => {
                 active={item.href === pathname}
                 onClick={() => setTimeout(close, 100)}
                 className="!text-base"
+                target={item.external ? '_blank' : undefined}
             >
                 <span>{item.title ?? 'Untitled'}</span>
                 {item.external && <FiExternalLink />}
-                {item.wip && (
+                {showWIP && item.wip && (
                     <div className="bg-ens-light-blue-surface text-3xs text-ens-light-blue-primary dark:bg-ens-dark-blue-surface dark:text-ens-dark-blue-primary rounded-md px-1 font-bold">
                         {item.wip == 1 ? 'WIP' : `${item.wip}%`}
                     </div>
                 )}
-                {item.design_wip && (
-                    <div className="bg-ens-light-pink-primary dark:bg-ens-dark-pink-primary h-1.5 w-1.5 rounded-full"></div>
+                {showWIP && item.design_wip && (
+                    <div className="bg-ens-light-pink-primary dark:bg-ens-dark-pink-primary size-1.5 rounded-full"></div>
                 )}
             </NavLink>
         </li>

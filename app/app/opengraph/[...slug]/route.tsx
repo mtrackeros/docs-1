@@ -4,43 +4,7 @@ import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { readFile } from 'node:fs/promises';
 
-// Route segment config
-// export const runtime = 'nodejs';
-// export const runtime = 'edge';
-// export const dynamic = 'error';
-// eslint-disable-next-line unicorn/prevent-abbreviations
-// export const dynamicParams = false;
-// export const revalidate = false;
-
-// eslint-disable-next-line unicorn/prevent-abbreviations
-// export async function generateStaticParams() {
-//     const pages = ['a/b'];
-
-//     return pages.map((slug) => ({
-//         slug: slug.split('/'),
-//     }));
-// }
-
-// export async function generateImageMetadata({
-//     params,
-// }: {
-//     params: { slug: string };
-// }) {
-//     // const images = await getOGImages(params.id);
-//     const images = [{ text: 'Other text' }, { text: 'O:' + params.slug }];
-
-//     return images.map((image, index) => ({
-//         id: index,
-//         size: { width: 1600, height: 840 },
-//         alt: image.text,
-//         contentType: 'image/png',
-//     }));
-// }
-
-// Font
-// const interSemiBold = fetch(
-//     new URL('public/Inter-SemiBold.ttf', import.meta.url)
-// ).then((response) => response.arrayBuffer());
+import { navigation } from '#/config/navigation';
 
 // eslint-disable-next-line unicorn/prevent-abbreviations
 export async function generateStaticParams() {
@@ -71,7 +35,10 @@ const fontScale = (length: number) => {
     );
 };
 
-const satoshiFont = readFile('public/fonts/sans-serif/Satoshi-Bold.otf');
+const satoshiBoldFont = readFile('public/fonts/sans-serif/Satoshi-Bold.otf');
+const satoshiMediumFont = readFile(
+    'public/fonts/sans-serif/Satoshi-Medium.otf'
+);
 
 // const satoshiFont = fetch(
 //     new URL(, import.meta.url)
@@ -87,25 +54,11 @@ export async function GET(request: NextRequest) {
     // ex web/siwe (remove final .png, and remove /opengraph/)
     const slug = pathname.slice(11, -4);
 
+    const section = navigation.protocol.find((section) =>
+        section.activePattern?.test('/' + slug)
+    )?.name;
+
     const page = await getPageBySlug(slug);
-
-    const [[avatars, moreAvatars], [authors, moreAuthors]] = (() => {
-        if (!page.pageProperties.meta?.contributors)
-            return [
-                [[], 0],
-                [[], 0],
-            ];
-
-        const v = [...page.pageProperties.meta.contributors].reverse();
-        const s1 = v.slice(0, 5).reverse();
-        const s2 = v.slice(0, 3);
-
-        // grab first 5 contributors
-        return [
-            [s1, v.length - s1.length],
-            [s2, v.length - s2.length],
-        ];
-    })();
 
     return new ImageResponse(
         (
@@ -116,185 +69,118 @@ export async function GET(request: NextRequest) {
                     width: '100%',
                     height: '100%',
                     display: 'flex',
+                    padding: '80px',
                     fontFamily: 'Satoshi',
                 }}
             >
                 <div
                     style={{
                         display: 'flex',
-                        background:
-                            'radial-gradient(50% 50% at 50% 50%, rgba(82, 152, 255, 0.163) 0%, rgba(255, 255, 255, 0) 100%)',
-                        width: '100%',
-                        height: '100%',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        padding: '80px',
+                        gap: '24px',
+
+                        width: '100%',
+                        height: '100%',
+                        background: 'white',
+                        padding: '90px 32px',
+                        borderRadius: '2rem',
                     }}
                 >
                     <div
                         style={{
                             display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
                             alignItems: 'center',
-                            width: '100%',
-                            height: '100%',
-                            background: 'white',
-                            padding: '80px',
-                            // border: '3px solid #c0c0c0',
-                            borderRadius: '2rem',
-                            boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.17)',
+                            gap: '0.5rem',
+                            fontSize: '3rem',
+                            fontWeight: 'bold',
+                            color: 'rgb(82, 152, 255)',
                         }}
                     >
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                fontSize: '3rem',
-                                fontWeight: 'bold',
-                                color: 'rgb(82, 152, 255)',
-                            }}
+                        <svg
+                            width="228"
+                            height="100"
+                            viewBox="0 0 228 100"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                         >
-                            <svg
-                                style={{ width: '6rem', height: '6rem' }}
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="328"
-                                height="328"
-                                viewBox="0 0 328 328"
-                                fill="none"
-                            >
-                                <mask
-                                    id="mask0_13_80"
-                                    maskUnits="userSpaceOnUse"
-                                    x="17"
-                                    y="0"
-                                    width="295"
-                                    height="328"
-                                >
-                                    <path
-                                        d="M312 0H17V328H312V0Z"
+                            <g clip-path="url(#clip0_1593_5439)">
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M33.5223 15.077C33.1353 14.8069 32.6585 15.2675 32.9178 15.6608C37.2488 22.2296 51.6458 44.0856 53.6345 47.3665C53.9316 47.8566 54.2722 48.3959 54.6374 48.9741L54.6376 48.9743C56.6838 52.214 59.503 56.6776 59.7761 60.5819C59.8082 61.0412 60.4452 61.1344 60.6054 60.7025C60.8639 60.0058 61.139 59.1743 61.3954 58.2244C64.6324 46.2338 59.9313 33.51 49.7215 26.3838L33.5223 15.077ZM30.8586 15.647L11.4686 47.4617C11.3165 47.7112 10.9632 47.739 10.7746 47.5157C9.06758 45.4946 2.70804 36.8961 10.5773 29.0591C17.7581 21.9078 26.9043 16.809 30.294 15.0468C30.6786 14.8469 31.0837 15.2777 30.8586 15.647ZM29.7749 84.9234C30.1618 85.1935 30.6387 84.7328 30.3793 84.3395C26.0483 77.7707 11.6514 55.9147 9.6626 52.6338C9.36548 52.1437 9.02485 51.6044 8.65958 51.026C6.61335 47.7863 3.79411 43.3228 3.52101 39.4185C3.48889 38.9591 2.85192 38.8659 2.69168 39.2978C2.43327 39.9945 2.15815 40.826 1.90173 41.7759C-1.33524 53.7666 3.36584 66.4903 13.5756 73.6165L29.7749 84.9234ZM51.8301 52.5352L32.4401 84.35C32.215 84.7193 32.6201 85.1501 33.0047 84.9502C36.3944 83.1879 45.5407 78.0892 52.7214 70.9379C60.5906 63.1009 54.2311 54.5024 52.5241 52.4813C52.3355 52.258 51.9822 52.2858 51.8301 52.5352ZM120.059 30.0646C124.965 35.0469 127.436 42.6194 127.644 52.2092C127.652 52.5617 127.372 52.8539 127.019 52.8651L91.3473 53.9912C90.9863 54.0026 90.7034 54.3081 90.7281 54.668C91.2814 62.6987 95.4356 66.6848 102.812 66.452C109.036 66.2554 112.178 63.4409 113.155 58.5204C113.22 58.1945 113.511 57.9582 113.843 57.9769L126.267 58.6776C126.667 58.7001 126.951 59.0788 126.853 59.4668C124.091 70.3685 115.868 76.0354 103.128 76.4376C95.2505 76.6863 88.9092 74.3623 84.5367 70.3608C79.539 65.7732 76.9045 59.1926 76.6364 50.7199C76.381 42.6507 78.3857 35.7218 83.1843 30.8249C87.4906 26.3474 93.4767 23.8362 101.354 23.5875C109.332 23.3356 115.674 25.6596 120.059 30.0646ZM101.664 33.3714C97.5231 33.5021 94.6326 34.805 92.7936 37.3872C91.5579 39.0819 90.8383 41.1792 90.5561 43.6054C90.5115 43.9888 90.8238 44.3151 91.2101 44.3029L112.293 43.6373C112.676 43.6252 112.966 43.2859 112.906 42.9082C112.463 40.1042 111.57 37.7582 109.836 36.0414C107.853 34.0847 105.299 33.2566 101.664 33.3714ZM181.603 60.6285C182.912 71.7844 192.771 76.4548 204.577 76.4548C216.399 76.4548 227.11 72.62 227.11 60.5101C227.11 48.5948 216.068 46.1176 207.112 44.1082L206.901 44.0609C200.131 42.5472 196.494 41.3362 196.494 37.9051C196.494 34.3731 199.929 32.8593 204.072 32.8593C208.902 32.8593 212.162 35.1654 212.704 40.3067C212.745 40.6918 213.097 40.9763 213.479 40.9112L225.191 38.9164C225.531 38.8586 225.766 38.5412 225.717 38.2008C224.141 27.176 214.785 23.5751 203.87 23.5751C192.957 23.5751 183.156 27.9145 183.156 39.0152C183.156 49.4095 192.048 52.4369 201.748 54.758C209.73 56.6754 213.57 57.8863 213.57 61.2165C213.57 64.9504 210.64 67.0696 204.88 67.0696C199.449 67.0696 195.507 64.5589 195.021 59.002C194.988 58.6217 194.651 58.3318 194.271 58.3802L182.157 59.9267C181.812 59.9708 181.563 60.2833 181.603 60.6285ZM178.238 44.4256C178.238 37.8661 177.733 32.4167 173.691 28.3801C170.458 25.1508 166.719 23.6371 160.253 23.6371C154.151 23.6371 148.747 25.7272 145.905 31.1212C145.76 31.3957 145.298 31.2976 145.298 30.9874V25.4958C145.298 25.1381 145.008 24.8481 144.65 24.8481H131.902C131.544 24.8481 131.253 25.1381 131.253 25.4958V75.3664C131.253 75.7241 131.544 76.0141 131.902 76.0141H144.751C145.109 76.0141 145.399 75.7241 145.399 75.3664V47.7558C145.399 37.3616 150.451 34.435 154.796 34.435C157.828 34.435 159.545 34.7378 161.364 36.4533C163.587 38.5725 163.991 40.9945 163.991 45.6366V75.3664C163.991 75.7241 164.281 76.0141 164.64 76.0141H177.59C177.948 76.0141 178.238 75.7241 178.238 75.3664V44.4256Z"
+                                    fill="#0080BC"
+                                />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1593_5439">
+                                    <rect
+                                        width="226.22"
+                                        height="100"
                                         fill="white"
+                                        transform="translate(0.890137)"
                                     />
-                                </mask>
-                                <g mask="url(#mask0_13_80)">
-                                    <path
-                                        d="M55.423 77.1727C58.4917 71.4759 62.9204 66.6192 68.3185 63.0311L158.912 0L66.088 152.931C66.088 152.931 57.9776 139.275 54.8145 132.365C50.8729 123.677 48.885 114.236 48.99 104.702C49.0951 95.1681 51.2908 85.7724 55.423 77.1727ZM18.0338 182.669C19.0567 197.294 23.2038 211.532 30.1975 224.43C37.1912 237.329 46.87 248.589 58.5859 257.458L158.79 327.075C158.79 327.075 96.0965 237.054 43.2167 147.477C37.8631 138.013 34.2641 127.666 32.592 116.931C31.8518 112.07 31.8518 107.125 32.592 102.264C31.2132 104.81 28.5368 110.022 28.5368 110.022C23.175 120.917 19.5233 132.568 17.7094 144.568C16.6653 157.252 16.7739 170.004 18.0338 182.669ZM273.512 194.79C270.267 187.881 262.238 174.224 262.238 174.224L169.577 327.075L260.17 264.084C265.568 260.496 269.997 255.64 273.066 249.943C277.198 241.343 279.393 231.947 279.499 222.414C279.604 212.88 277.616 203.438 273.674 194.75L273.512 194.79ZM310.292 144.446C309.269 129.822 305.122 115.583 298.129 102.685C291.135 89.7869 281.456 78.5263 269.74 69.6575L169.698 0C169.698 0 232.351 90.0213 285.272 179.598C290.611 189.065 294.196 199.412 295.856 210.144C296.596 215.005 296.596 219.95 295.856 224.811C297.235 222.265 299.911 217.053 299.911 217.053C305.273 206.158 308.925 194.507 310.738 182.507C311.796 169.824 311.701 157.072 310.455 144.406L310.292 144.446Z"
-                                        fill="url(#paint0_linear_13_80)"
-                                    />
-                                </g>
-                                <defs>
-                                    <linearGradient
-                                        id="paint0_linear_13_80"
-                                        x1="213.139"
-                                        y1="365.839"
-                                        x2="-120.913"
-                                        y2="-163.517"
-                                        gradientUnits="userSpaceOnUse"
-                                    >
-                                        <stop stop-color="#44BCF0" />
-                                        <stop
-                                            offset="0.378795"
-                                            stop-color="#7298F8"
-                                        />
-                                        <stop offset="1" stop-color="#A099FF" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                            {/* <img
-                        src={''}
-                        alt=""
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div
                         style={{
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: '50%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '8px',
                         }}
-                    /> */}
-                        </div>
+                    >
                         <div
                             style={{
                                 fontSize: fontScale(
                                     page.pageProperties.meta.title.length
                                 ),
+                                fontWeight: 830,
                                 width: '100%',
                                 display: 'flex',
-                                alignItems: 'flex-end',
                                 justifyContent: 'center',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
-                                flexGrow: 1,
                             }}
                         >
                             {page.pageProperties.meta.title}
                         </div>
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: '0.75rem',
-                            }}
-                        >
+                        {!!section && (
                             <div
                                 style={{
+                                    fontSize: 42,
+                                    fontWeight: 500,
+                                    color: '#9B9BA7',
+                                    width: '100%',
                                     display: 'flex',
-                                    paddingTop: '1rem',
-                                    paddingBottom: '1rem',
+                                    justifyContent: 'center',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
                                 }}
                             >
-                                {avatars.map((key, index) => (
-                                    <div
-                                        key={key}
-                                        style={{
-                                            display: 'flex',
-                                            width: '3.5rem',
-                                            height: '3.5rem',
-                                            borderRadius: '50%',
-                                            background: 'lightblue',
-                                            marginLeft:
-                                                index > 0 ? '-1.5rem' : '0',
-                                        }}
-                                    >
-                                        <img
-                                            src={
-                                                'https://github.com/' +
-                                                key +
-                                                '.png'
-                                            }
-                                            alt=""
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                borderRadius: '50%',
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                                {moreAvatars > 0 && (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            width: '3.5rem',
-                                            height: '3.5rem',
-                                            borderRadius: '50%',
-                                            background: 'lightblue',
-                                            marginLeft: '-1.5rem',
-                                        }}
-                                    >
-                                        + {moreAvatars}
-                                    </div>
-                                )}
+                                {section}
                             </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    fontSize: 32,
-                                }}
-                            >
-                                {authors.join(', ')}
-                                {moreAuthors > 0 && ', ...'}
-                            </div>
-                        </div>
+                        )}
+                    </div>
+                    <div
+                        style={{
+                            position: 'absolute',
+                            bottom: '16px',
+                            left: '16px',
+                            background: '#EEF5FF',
+                            color: '#3889FF',
+                            padding: '6px 16px',
+                            borderRadius: '30px',
+                            lineHeight: '30px',
+                            fontSize: '30px',
+                            fontWeight: 700,
+                        }}
+                    >
+                        Docs
                     </div>
                 </div>
             </div>
@@ -308,9 +194,15 @@ export async function GET(request: NextRequest) {
             fonts: [
                 {
                     name: 'Satoshi',
-                    data: await satoshiFont,
+                    data: await satoshiMediumFont,
                     style: 'normal',
-                    weight: 400,
+                    weight: 500,
+                },
+                {
+                    name: 'Satoshi',
+                    data: await satoshiBoldFont,
+                    style: 'normal',
+                    weight: 700,
                 },
             ],
         }

@@ -1,6 +1,6 @@
 :root.dark {
-    --shiki-color-text: theme('colors.ens.dark.text.primary');
-    --shiki-color-background: theme('colors.ens.dark.background.primary');
+    --shiki-foreground: theme('colors.ens.dark.text.primary');
+    --shiki-background: theme('colors.ens.dark.background.primary');
     --shiki-token-constant: theme('colors.ens.dark.blue.primary');
     --shiki-token-string: theme('colors.ens.dark.green.primary');
     --shiki-token-comment: theme('colors.ens.dark.text.secondary');
@@ -12,8 +12,8 @@
 }
 
 :root {
-    --shiki-color-text: #0969da;
-    --shiki-color-background: #afb8c133;
+    --shiki-foreground: #0969da;
+    --shiki-background: #afb8c133;
     --shiki-token-constant: #0044ff;
     --shiki-token-string: #0a3069;
     --shiki-token-comment: #6e7781;
@@ -25,7 +25,7 @@
     --shiki-token-link: #0969da;
 }
 
-/* @font-face {
+@font-face {
     font-family: 'Satoshi';
     font-style: normal;
     font-weight: normal;
@@ -43,7 +43,7 @@
     font-family: 'Satoshi';
     font-display: swap;
     src: url('/fonts/sans-serif/Satoshi-Variable.ttf') format('truetype');
-} */
+}
 
 @font-face {
     font-family: 'Inter';
@@ -117,6 +117,10 @@ h1, h2, h3, h4 {
 
 html.dark {
     color-scheme: dark;
+}
+
+.scrollbar {
+    scrollbar-gutter: stable;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -329,6 +333,17 @@ tbody tr:last-child td {
     @apply rounded-lg py-2.5 px-5;
 }
 
+.btn-subtle {
+    @apply bg-ens-light-background-primary dark:bg-ens-dark-background-primary;
+    @apply text-ens-light-text-secondary dark:text-ens-dark-text-secondary;
+    @apply hover:bg-ens-light-background-secondary dark:hover:bg-ens-dark-background-secondary hover:text-ens-light-text-secondary hover:dark:text-ens-dark-text-secondary;
+    @apply active:bg-ens-light-blue-bright dark:active:bg-ens-dark-blue-bright; /* */
+    @apply focus:ring focus:ring-offset-2 focus:ring-ens-light-border dark:focus:ring-ens-dark-border focus:outline-none; /* */
+    @apply border border-ens-light-border dark:border-ens-dark-border;
+    @apply rounded-lg py-2.5 px-5;
+    @apply font-bold;
+}
+
 .input {
     @apply block w-full border border-ens-light-border dark:border-ens-dark-border;
     @apply outline-none;
@@ -385,4 +400,17 @@ label.label {
 
 .card1::scrollbar {
     @apply rounded-tr-xl overflow-hidden;
+}
+
+.load-width {
+    animation: load-width 1s ease-out forwards;
+}
+
+@keyframes load-width {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 90%;
+    }
 }

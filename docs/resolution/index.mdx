@@ -23,7 +23,7 @@ Here is a little peak at what happens under the hood of your favourite library w
 
 ### 1. Find the Resolver
 
-Every name has a "resolver". A resolver is simply a contract that implements the [resolver specification](#todo) and can be queried for information about a name.
+Every name has a "resolver". A resolver is simply a contract that implements the [resolver specification](/resolvers/quickstart) and can be queried for information about a name.
 To get the resolver responsible for a name you can query [The Registry](/registry/ens) for the `resolver` of a name.
 
 <CodeGroup title="Get the resolver">
@@ -58,6 +58,12 @@ const ensResolver = await publicClient.getEnsResolver({
 });
 ```
 
+```py {{ variant: 'web3py', link: 'https://web3py.readthedocs.io/en/latest/ens_overview.html#working-with-resolvers' }}
+from ens.auto import ns
+
+resolver = ns.resolver('alice.eth')
+```
+
 </CodeGroup>
 
 To verify which specifications are implemented by a resolver you can call the `supportsInterface(bytes4 interfaceID)` on the resolver with the interfaceID you would like to test for.
@@ -74,3 +80,20 @@ More about loading information from a resolver can be found [here](/resolvers/in
 
 In addition, all of the above functions can be sent to the `resolve()` function, specified in [ENSIP-10](/ensip/10).
 This allows for not only multicall functionality, but also easier implementation of EIP-3668, and more.
+Most clients & many resolvers utilize wildcard resolution as their primary form of resolution.
+
+<LiveDemo id="resolverdemo" />
+
+## Reverse Resolution
+
+Due to the modular nature of how ENS is designed, it is also possible to lookup the "primary name" of an address.
+This process actually uses forward resolution under the hood, you read that right - its just forwards resolution.
+
+```solidity
+Resolver("0x225f137127d9067788314bc7fcc1f36746a3c3B5.addr.reverse").name() -> "luc.eth"
+```
+
+To look up the primary name of a given address you must do a resolver lookup for `addr.reverse` and then query the `name()` field on the resolver.
+This name field returns the "preferred" name for the address. You should always follow up a reverse lookup with a forward lookup to verify that the resulting name points back to the original address. If the address doesn't match, display the address rather than the reversed name.
+
+Please note that many libraries already have functionality to do this, you can read more about it in the [Getting a Primary Name](/web/reverse#get) section.

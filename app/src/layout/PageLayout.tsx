@@ -4,8 +4,8 @@ import { Article, WithContext } from 'schema-dts';
 
 import { Prose } from '@/components/mdx/Prose';
 import { SectionProvider } from '@/components/SectionProvider';
-import { Breadcrumbs } from '@/content/prose/breadcrumbs/Breadcrumbs';
 import { MdxPageProps } from '@/lib/mdxPageProps';
+import { Breadcrumbs } from '#/content/prose/breadcrumbs/Breadcrumbs';
 
 import { PageDetails } from './details/PageDetails';
 import { ProposalData } from './details/variations/SnapshotDetails';
@@ -31,7 +31,8 @@ export const Layout: FC<{
         '@context': 'https://schema.org',
         '@type': 'Article',
         headline: mdxProperties.meta.title,
-        // image: mdxProperties.meta.,
+        description: mdxProperties.meta.description,
+        image: 'https://docs.ens.domains/opengraph' + programmedSlug + '.png',
         author: mdxProperties.meta.contributors?.map((author) => ({
             '@type': 'Person',
             name: author,
@@ -45,7 +46,7 @@ export const Layout: FC<{
                 <RouteCheck slug={programmedSlug} />
                 <Header />
                 <Sidebar />
-                <div className="relative mt-16 lg:mt-24">
+                <div className="relative mt-16 lg:mt-16">
                     {isHome ? (
                         <>
                             <main className="relative min-h-[74vh] space-y-4 pb-4">

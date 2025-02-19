@@ -5,6 +5,26 @@
         },
         "redirects": [
             {
+                "pattern": "^/web/namehash$",
+                "destination": "/resolution/names#namehash"
+            },
+            {
+                "pattern": "^/dao/airdrop$",
+                "destination": "/dao/token"
+            },
+            {
+                "pattern": "^/subgraph$",
+                "destination": "/web/subgraph"
+            },
+            {
+                "pattern": "^/tlds?$",
+                "destination": "/dns/tlds"
+            },
+            {
+                "pattern": "^/deploy(s|ments)?$",
+                "destination": "/learn/deployments"
+            },
+            {
                 "pattern": "^/namewrapper$",
                 "destination": "/wrapper/overview"
             },
@@ -17,8 +37,16 @@
                 "destination": "/web/quickstart"
             },
             {
-                "pattern": "^/ccip$",
-                "destination": "/learn/ccip"
+                "pattern": "^/resolvers?$",
+                "destination": "/resolvers/quickstart"
+            },
+            {
+                "pattern": "^/(ccip|learn/ccip)$",
+                "destination": "/learn/ccip-read"
+            },
+            {
+                "pattern": "^/resolvers/ccip$",
+                "destination": "/resolvers/ccip-read"
             },
             {
                 "pattern": "^/(frequently-asked-questions|faqs)$",
@@ -146,7 +174,7 @@
             },
             {
                 "pattern": "^/dapp-developer-guide/ens-l2-offchain$",
-                "destination": "/learn/ccip"
+                "destination": "/learn/ccip-read"
             },
             {
                 "pattern": "^/dapp-developer-guide/ens-data-guide$",
@@ -229,7 +257,7 @@
                 "destination": "/disappeared"
             },
             {
-                "pattern": "^/v/governance/$",
+                "pattern": "^/v/governance/?$",
                 "destination": "/dao"
             },
             {
